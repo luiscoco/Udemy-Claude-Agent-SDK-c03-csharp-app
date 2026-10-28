@@ -1,0 +1,36 @@
+@page "/guide"
+
+<main class="student-shell">
+    <StudentHeader />
+    <section id="learning" class="student-section">
+        <h2>What you will learn</h2>
+        <div class="student-cards">
+            <article class="student-card"><h3><span class="student-number">1</span>Session overrides without changing the base agent</h3><p>The session replaces the system prompt and clears tools, MCP servers and skills. The stored agent definition is not updated.</p></article>
+            <article class="student-card"><h3><span class="student-number">2</span>Effective and stored capability snapshots</h3><p>The resolved session snapshot is compared with the stored agent retrieved separately, showing what was inherited and what was overridden.</p></article>
+            <article class="student-card"><h3><span class="student-number">3</span>Live observation versus paginated recorded history</h3><p>The live stream is opened before the message is sent; afterwards every recorded event is read page by page.</p></article>
+        </div>
+        <p class="student-note">Creates a real text-only override session, compares configurations, opens the stream before sending, and reads recorded history. Closing the browser stops observation; it does not interrupt remote work.</p>
+    </section>
+    <section id="run-guide" class="student-section">
+        <h2>How to run this application</h2>
+        <article class="student-step"><h3><span class="student-number">1</span>Install the .NET 10 SDK and open the application folder</h3><p>Restore the NuGet packages, including <code>Anthropic</code> 13.3.0.</p><pre><code class="language-powershell">dotnet --version
+dotnet restore</code></pre></article>
+        <article class="student-step"><h3><span class="student-number">2</span>Create your local .env file</h3><p>Use your own Anthropic API key and an existing agent ID and environment ID. Copy the example and edit the new file. The real .env is ignored by Git.</p><pre><code class="language-powershell">Copy-Item .env.example .env
+notepad .env</code></pre></article>
+        <article class="student-step"><h3><span class="student-number">3</span>Prepare resources</h3><p>Run <code>dotnet run -- setup</code> once after setting your API key. It creates an environment and base agent and writes their IDs into your local .env. Reuse those IDs on later runs.</p></article>
+        <article class="student-step"><h3><span class="student-number">4</span>Start the application</h3><p>Run the command below and wait for the printed server URL. Open <code>http://127.0.0.1:3003</code>. If PORT differs, use that value instead.</p><pre><code class="language-powershell">dotnet run</code></pre></article>
+        <article class="student-step"><h3><span class="student-number">5</span>Run and inspect the evidence</h3><p>Open the lab and press the main Run button once. Inspect the returned IDs, configuration and events. Each live run creates a remote session.</p></article>
+        <article class="student-step"><h3><span class="student-number">6</span>Use the console commands and stop</h3><p>The same workflow runs without the browser. Stop the web server with Ctrl+C. Closing a browser tab does not confirm remote cancellation.</p><pre><code class="language-powershell">dotnet run -- session "Why is the sky blue?"
+dotnet run -- history</code></pre></article>
+    </section>
+    <section class="student-section">
+        <h2>Create and understand .env</h2>
+        <p>Copy the example rather than renaming it. Put your own values in .env; leave .env.example safe for sharing. Restart the server after changing configuration. PORT controls the local URL. An empty optional model value uses the source default.</p>
+        <pre><code class="language-dotenv">ANTHROPIC_API_KEY=your_api_key
+CLAUDE_MODEL=claude-opus-5-5
+CLAUDE_SESSION_MODEL=
+CLAUDE_MANAGED_AGENT_ID=your_agent_id
+CLAUDE_MANAGED_ENVIRONMENT_ID=your_environment_id
+PORT=3003</code></pre>
+    </section>
+</main>

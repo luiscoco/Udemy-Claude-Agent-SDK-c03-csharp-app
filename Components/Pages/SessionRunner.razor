@@ -1,0 +1,93 @@
+@implements IDisposable
+@using LessonC03.Services
+@inject SessionLab Lab
+
+<section class="grid">
+    <article class="card">
+        <p class="eyebrow">THE EXPERIMENT</p>
+        <h2>Run a session</h2>
+        <p>The session clears tools, MCP servers and skills while preserving the stored base agent. Each run creates a new remote session with a 50-cent list-cost budget.</p>
+        <label for="prompt">Your prompt</label>
+        <textarea id="prompt" class="runfield" rows="3" maxlength="2000" @bind="prompt" @bind:event="oninput"></textarea>
+        <button id="run" disabled="@(!configured || running)" @onclick="RunAsync">Create session and observe <span>↗</span></button>
+        <p id="status" class="status" role="status">@status</p>
+        @if (answer.Length > 0)
+        {
+            <div id="answer" class="answer">@answer</div>
+        }
+    </article>
+    <article class="card results">
+        <div class="resulthead"><div><p class="eyebrow">SESSION EVIDENCE</p><h2>Inspect the results</h2></div><span class="live">● LIVE API</span></div>
+        @if (session is null)
+        {
+            <p id="empty">Your session configuration and events will appear here.</p>
+        }
+        else
+        {
+            <div id="result">
+                <div class="data"><span>SESSION ID</span><code>@session.Id</code></div>
+                <div class="data"><span>BASE AGENT AND VERSION</span><code>@session.AgentId · version @session.Version</code></div>
+                <div class="data"><span>SESSION CAPABILITIES</span><code>Tools @session.Tools · MCP @session.Mcp · Skills @session.Skills</code></div>
+                <div class="data"><span>STORED AGENT CAPABILITIES</span><code>@(stored is null ? "Loading…" : $"Tools {stored.Tools} · MCP {stored.Mcp} · Skills {stored.Skills} · version {stored.Version}")</code></div>
+                <div class="history-title">Live events</div>
+                <ul class="events">
+                    @foreach (var e in events)
+                    {
+                        <li>@e.Type · @e.Id</li>
+                    }
+                </ul>
+                <div class="history-title">Recorded history</div>
+                <p>@(history is null ? "Waiting for the session to finish." : $"{history.Count} events recorded: {string.Join(", ", history.Select(h => h.Type))}")</p>
+            </div>
+        }
+    </article>
+</section>
+
+@code {
+    readonly bool configured = SessionLab.Configured;
+    string prompt = "Why is the sky blue?";
+    string status = SessionLab.Configured
+        ? "Configuration ready. Your API key stays on the server."
+        : "Configure your API key and resource IDs in .env.";
+    string answer = "";
+    bool running;
+    SessionSnapshot? session;
+    StoredSnapshot? stored;
+    List<HistoryEntry> events = [];
+    IReadOnlyList<HistoryEntry>? history;
+
+    // Closing the tab stops observation; it does not interrupt the remote session.
+    readonly CancellationTokenSource closed = new();
+
+    async Task RunAsync()
+    {
+        var text = prompt.Trim();
+        if (text.Length == 0) { status = "Enter a prompt."; return; }
+        if (text.Length > 2000) { status = "Enter a prompt of up to 2,000 characters."; return; }
+
+        running = true; status = "Creating session…";
+        answer = ""; session = null; stored = null; events = []; history = null;
+        bool sawStop = false, failed = false;
+
+        void Update(Action change) => _ = InvokeAsync(() => { change(); StateHasChanged(); });
+
+        try
+        {
+            await Lab.Run(text, new RunObserver
+            {
+                Session = s => Update(() => { session = s; status = "Listening for live events…"; }),
+                Stored = s => Update(() => stored = s),
+                Event = e => Update(() => events.Add(e)),
+                Answer = a => Update(() => answer += a),
+                Stop = reason => Update(() => { sawStop = true; status = $"Session stopped: {reason}."; }),
+                Error = message => Update(() => { failed = true; status = message; }),
+                History = h => Update(() => history = h),
+            }, closed.Token);
+            if (!sawStop && !failed) status = "Stream ended before a stop event; inspect the recorded session.";
+        }
+        catch (OperationCanceledException) { }
+        finally { running = false; }
+    }
+
+    public void Dispose() { closed.Cancel(); closed.Dispose(); }
+}

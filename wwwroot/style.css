@@ -1,0 +1,54 @@
+:root{font-family:Inter,Segoe UI,sans-serif;color:#1d2825;background:#f6f7f3}*{box-sizing:border-box}body{margin:0}header{border-bottom:1px solid #dfe6de;background:#fbfcf9}.wrap{width:min(1120px,calc(100% - 48px));margin:auto}.top{height:70px;display:flex;align-items:center;justify-content:space-between}.brand{color:#143f34;font-weight:800;letter-spacing:.1em;text-decoration:none;font-size:19px}.brand span{font-size:12px;margin-left:8px}.badge,.live{font-size:10px;font-weight:800;letter-spacing:.12em;color:#3e7060;background:#e5f0e7;padding:8px 11px;border-radius:20px}.intro{display:flex;justify-content:space-between;align-items:center;padding:66px 0 45px}.eyebrow{font-size:10px;letter-spacing:.16em;font-weight:800;color:#648477}.eyebrow span{color:#bac8c0}h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(46px,6vw,70px);line-height:1.02;letter-spacing:-.045em;margin:20px 0}h1 em{color:#347963;font-weight:400}.lead{color:#62716a;line-height:1.7;max-width:540px;font-size:16px}.orb{width:206px;height:206px;border-radius:50%;background:#dceade;border:1px solid #c8ddcc;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#2c6b56}.orb span{font:76px Georgia,serif}.orb small{text-align:center;line-height:1.5;font-weight:800;letter-spacing:.12em;font-size:9px}.flow{display:flex;align-items:center;justify-content:space-around;padding:22px;background:#e8efe7;border:1px solid #d7e2d5;border-radius:12px}.flow div{display:flex;gap:12px;align-items:center}.flow b{border-radius:50%;background:#cfe1d1;color:#326c57;padding:10px;font-size:11px}.flow strong,.flow small{display:block}.flow strong{font-size:13px}.flow small{color:#77887d;margin-top:4px}.flow i{color:#9cb7a5;font-style:normal}.grid{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;margin:25px 0}.card{background:#fff;border:1px solid #e1e7e0;border-radius:14px;padding:30px;box-shadow:0 8px 30px #263d2d08}.card h2{font:27px Georgia,serif;margin:12px 0}.card p{color:#718078;line-height:1.65;font-size:14px}.card p.eyebrow{font-size:10px;color:#648477}.note{background:#f3f7f2;border-left:3px solid #96b99d;padding:14px 16px;color:#63776a;font-size:13px;line-height:1.6;margin:26px 0}button{width:100%;background:#235e49;color:white;border:0;border-radius:8px;padding:16px;font-weight:700;text-align:left;cursor:pointer}button span{float:right}button:disabled{opacity:.55;cursor:wait}.status{min-height:25px}.resulthead{display:flex;justify-content:space-between;align-items:center}.empty{text-align:center;border:1px dashed #d8e4d9;border-radius:10px;padding:43px 20px;margin-top:20px;color:#6b7f72}.empty p{max-width:250px;margin:auto}.emptyicon{font-size:32px;color:#8bb49b;margin-bottom:12px}.data{padding:15px 0;border-bottom:1px solid #edf0eb}.data span{display:block;font-size:9px;letter-spacing:.13em;color:#8c9c91;font-weight:800;margin-bottom:7px}code{font-size:13px;overflow-wrap:anywhere;color:#325f4d}.success{margin-top:20px;padding:12px;background:#e9f4e9;color:#377153;font-size:13px;border-radius:7px}footer{padding:18px 0 40px;color:#98a59a;font-size:10px;font-weight:700;letter-spacing:.13em}footer span{padding:0 10px}@media(max-width:700px){.orb{display:none}.intro{padding:40px 0 25px}.grid{grid-template-columns:1fr}.flow{gap:8px}.flow div{gap:5px}.flow small{display:none}.flow i{font-size:12px}}
+/* Improve legibility across the lesson interface. */
+.brand span { font-size: 15px; }
+.badge, .live { font-size: 12px; }
+.eyebrow, .card p.eyebrow { font-size: 13px; }
+.orb small { font-size: 13px; letter-spacing: .08em; }
+.lead { font-size: 18px; }
+.flow b { font-size: 13px; }
+.flow strong { font-size: 15px; }
+.flow small { font-size: 14px; }
+.card p { font-size: 17px; }
+.note, .success { font-size: 16px; }
+button { font-size: 16px; }
+.data span { font-size: 12px; }
+code { font-size: 15px; }
+footer { font-size: 12px; }
+/* Visual language shared with the concept presentations. */
+:root{font-family:Arial,Helvetica,sans-serif;color:#090d3b;background:#fff}
+body{background:radial-gradient(ellipse at 98% 2%,#deefff 0,transparent 27%),radial-gradient(ellipse at 1% 98%,#e5f4ff 0,transparent 24%),#fff}
+header{background:transparent;border-color:#d9eaf8}
+.brand{font-size:22px;color:#090d3b;letter-spacing:-.03em;font-weight:900}
+.brand span{font-size:inherit;letter-spacing:inherit;margin:0;color:#ff4b0b}
+.badge,.live{background:#e4f3ff;color:#0872d4}
+.intro{padding-top:45px}
+.eyebrow,.card p.eyebrow{color:#087dfa}
+h1{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:-.045em;color:#090d3b}
+h1 em{font-style:normal;font-weight:900;color:#ff4b0b}
+.lead,.card p{color:#193269}
+.orb{background:#e9f5ff;border-color:#d8eafa;color:#0872d4;border-radius:28px;width:205px;height:220px}
+.orb img{height:155px;width:150px;object-fit:contain;filter:drop-shadow(0 5px 5px #053b7720)}
+.flow{background:#e9f5ff;border:1px solid #d6eaf9;border-radius:20px}
+.flow b{color:#fff;background:#087dfa}.flow div:nth-of-type(2) b{background:#853df2}.flow div:nth-of-type(3) b{background:#00a867}
+.flow i{color:#087dfa}.flow strong{color:#090d3b}.flow small{color:#37557c}
+.card{border:1px solid #dfebf7;border-radius:22px;background:linear-gradient(145deg,#edf7ff,#fff 80%);box-shadow:0 6px 18px #1836680c}
+.card.results{background:linear-gradient(145deg,#f1ebff,#fff 80%)}
+.card h2{font-family:Arial,Helvetica,sans-serif;font-weight:900;color:#090d3b;letter-spacing:-.03em}
+.note{background:#fff2e5;border-color:#ff8900;color:#193269}
+button{background:#087dfa;color:#fff}button:hover:not(:disabled){background:#0069d1}
+button:focus-visible{outline:3px solid #ff8900;outline-offset:3px}
+.empty{background:#fff;border-color:#cddff0;color:#193269}.emptyicon{color:#087dfa}
+.data{border-color:#e1e7f3}.data span{color:#536b91}code{color:#193269}
+.success{background:#e9fbf2;color:#087a4c}footer{color:#547297}
+/* Keep workflow steps readable at desktop and mobile sizes. */
+.flow { gap: 18px; }
+.flow b { font-size: 16px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.flow strong { font-size: 18px; }
+.flow small { display: block; font-size: 17px; line-height: 1.4; }
+.flow i { font-size: 22px; }
+@media (max-width: 700px) {
+  .flow { flex-direction: column; align-items: stretch; padding: 22px; }
+  .flow div { gap: 14px; }
+  .flow small { display: block; }
+  .flow i { align-self: center; transform: rotate(90deg); }
+}

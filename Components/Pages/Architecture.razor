@@ -1,0 +1,86 @@
+@page "/architecture"
+
+<main class="student-shell">
+    <StudentHeader />
+    <section class="student-section">
+        <h2>Architecture &amp; workflow</h2>
+        <p>The browser talks to the Blazor host over its interactive circuit. Only the server holds the API key and calls Claude Managed Agents through the <code>Anthropic</code> NuGet package.</p>
+        <img src="/architecture.svg" alt="Browser, Blazor host and Claude Managed Agents: create session, inspect snapshots, stream live events, list recorded history." style="max-width:100%;height:auto">
+    </section>
+    <section class="student-section">
+        <h2>Step 0 · Prepare the application before the workflow</h2>
+        <p>Provision prerequisites once: environment first, then base agent. The command writes the returned IDs locally; the runtime workflow reuses them.</p>
+        <pre><code class="language-powershell">dotnet restore
+dotnet run -- setup
+dotnet run</code></pre>
+    </section>
+    @foreach (var step in steps)
+    {
+        <article class="student-step">
+            <h3>@step.Title</h3>
+            <p>@step.Text</p>
+            <p class="student-source">Source: Services/SessionLab.cs</p>
+            <pre><code class="language-csharp">@step.Code</code></pre>
+        </article>
+    }
+</main>
+
+@code {
+    record Step(string Title, string Text, string Code);
+
+    static readonly Step[] steps =
+    [
+        new("1 · Apply session-only capability overrides",
+            "BetaManagedAgentsAgentWithOverridesParams selects the stored base agent but replaces system instructions and clears tools, MCP servers and skills for this session. It does not update the stored base definition.",
+            """
+            client.Beta.Sessions.Create(new SessionCreateParams
+            {
+                Agent = new BetaManagedAgentsAgentWithOverridesParams
+                {
+                    ID = Env("CLAUDE_MANAGED_AGENT_ID")!,
+                    Model = Env("CLAUDE_SESSION_MODEL") is { } model ? (SessionModel)new BetaManagedAgentsModelConfigParams { ID = model } : null,
+                    System = "Answer in one sentence.",
+                    Tools = [],
+                    McpServers = [],
+                    Skills = [],
+                },
+                EnvironmentID = Env("CLAUDE_MANAGED_ENVIRONMENT_ID")!,
+                Budget = new BetaManagedAgentsBudgetLimit
+                {
+                    MaxListCost = new() { Currency = "USD", Amount = "50" },
+                },
+            }, ct);
+            """),
+        new("2 · Compare stored and effective configuration",
+            "The stored agent is retrieved separately from the resolved session snapshot. Comparing their versions and capability counts demonstrates what was inherited and what was overridden.",
+            """
+            observe.Session(new(session.ID, session.Agent.ID, session.Agent.Version,
+                session.Agent.Tools.Count, session.Agent.McpServers.Count, session.Agent.Skills.Count));
+
+            var stored = await client.Beta.Agents.Retrieve(session.Agent.ID, cancellationToken: ct);
+            observe.Stored(new(stored.Version, stored.Tools.Count, stored.McpServers.Count, stored.Skills.Count));
+            """),
+        new("3 · Open the live stream before sending",
+            "The raw-response stream call returns once the SSE connection is established, and only then is the user message sent. Closing the browser cancels observation; it does not interrupt remote work.",
+            """
+            using var live = await client.Beta.Sessions.Events.WithRawResponse.StreamStreaming(session.ID, cancellationToken: ct);
+
+            await client.Beta.Sessions.Events.Send(session.ID, new EventSendParams
+            {
+                Events = [new BetaManagedAgentsUserMessageEventParams
+                {
+                    Content = [new BetaManagedAgentsTextBlock { Text = prompt.Trim() }],
+                }],
+            }, ct);
+
+            await foreach (var ev in live.Enumerate(ct)) { /* agent.message, session.status_idle, ... */ }
+            """),
+        new("4 · Read all recorded history pages",
+            "After observation ends, every recorded event is listed. Paginate() walks all pages, separate from the transient live feed.",
+            """
+            var page = await client.Beta.Sessions.Events.List(sessionId, cancellationToken: ct);
+            await foreach (var ev in page.Paginate(ct))
+                history.Add(new(ev.ID, ev.Type));
+            """),
+    ];
+}

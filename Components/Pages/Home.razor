@@ -1,0 +1,29 @@
+﻿@page "/"
+
+<PageTitle>Session Configuration · Lesson C03</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="@Assets["style.css"]" />
+    <link rel="stylesheet" href="@Assets["lab.css"]" />
+    <link rel="stylesheet" href="@Assets["student.css"]" />
+    <link rel="stylesheet" href="@Assets["code-highlighting.css"]" />
+</HeadContent>
+
+<header><div class="wrap top"><div class="brand">How <span>Claude Managed Agents</span> Works</div><span class="badge">CONCEPT 03 / 60</span></div></header>
+<main class="wrap">
+    <section id="application-lab" aria-label="Application navigation"><StudentNav /></section>
+    <div class="intro">
+        <div>
+            <p class="eyebrow">CLAUDE MANAGED AGENTS / LESSON 03</p>
+            <h1>Configure a session.<br><em>Explore its history.</em></h1>
+            <p class="lead">Create a text-only session override, inspect the effective agent configuration, and compare live events with the recorded history.</p>
+        </div>
+        <div class="orb"><img src="/astronaut.png" alt=""><small>LESSON C03<br>SESSION CONFIGURATION</small></div>
+    </div>
+    <section class="flow" aria-label="Session workflow">
+        <div><b>01</b><span><strong>Configure</strong><small>Override one session</small></span></div><i>→</i>
+        <div><b>02</b><span><strong>Inspect</strong><small>Compare snapshots</small></span></div><i>→</i>
+        <div><b>03</b><span><strong>Observe</strong><small>Read live and recorded events</small></span></div>
+    </section>
+    <SessionRunner @rendermode="InteractiveServer" />
+    <footer>LESSON C03 <span>·</span> CONFIGURE → INSPECT → OBSERVE</footer>
+</main>

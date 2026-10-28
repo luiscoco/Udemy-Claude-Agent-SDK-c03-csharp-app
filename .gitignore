@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+.env*
+!.env.example
+.managed-ids.json
+.last-session*
+*.user
